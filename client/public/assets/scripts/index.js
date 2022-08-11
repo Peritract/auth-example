@@ -16,13 +16,27 @@ const loadPosts = () => {
 
     const container = document.querySelector("container");
 
-    fetch("http://localhost:3000/posts")
+    const options = {
+        headers: new Headers({
+            'Authorization': localStorage.getItem("token")
+        })
+    }
+
+    fetch("http://localhost:3000/posts", options)
         .then(res => res.json())
         .then(data => {
-            data["posts"].forEach(p => {
-                const elem = createPostElement(p);
-                container.appendChild(elem);
-            })
+
+            if (data["success"]) {
+                data["posts"].forEach(p => {
+                    const elem = createPostElement(p);
+                    container.appendChild(elem);
+                })
+            } else {
+                throw 'Unauthorised access!'
+            }
+            
+        }).catch(err => {
+            window.location.assign("login_register");
         })
 }
 

@@ -11,8 +11,15 @@ function login (data) {
 
     fetch("http://localhost:3000/users/login", options)
         .then(res => res.json())
-        .then(data => console.log(data))
-        .catch(err => alert("Login failed (for some reason)"))
+        .then(data => {
+            if (data["success"]) {
+                localStorage.setItem("token", data["token"]);
+                window.location.assign("/");
+            } else {
+                throw "Unable to authenticate!"
+            }
+        })
+        .catch(err => alert(err))
 
 }
 
